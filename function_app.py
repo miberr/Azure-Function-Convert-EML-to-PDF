@@ -7,7 +7,7 @@ from email.parser import BytesParser
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
 
-app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
 @app.route(route="convertEmlToPdf", methods=["POST"])
 async def convertMsgToPdf(req: func.HttpRequest) -> func.HttpResponse:
