@@ -7,7 +7,7 @@ on:
         paths-ignore:
             - 'README.md'
             - 'infrastructure.bicep'
-            - '.github/workflows/push-container-dockerhub.yml'
+            - '.github/*'
 
 jobs:
     push-to-dockerhub:
