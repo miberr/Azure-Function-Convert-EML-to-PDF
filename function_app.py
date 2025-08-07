@@ -10,7 +10,7 @@ from playwright.async_api import async_playwright
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
 @app.route(route="convertEmlToPdf", methods=["POST"])
-async def convertMsgToPdf(req: func.HttpRequest) -> func.HttpResponse:
+async def convertEmlToPdf(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Processing request...')
 
     try:
@@ -20,55 +20,52 @@ async def convertMsgToPdf(req: func.HttpRequest) -> func.HttpResponse:
         # If no file is provided, return an error
         if file_content_base64:
 
+            # Decode the base64 encoded file content
+            logging.info("File content received, decoding...")
             file_content = base64.b64decode(file_content_base64)
 
+            # Parse the EML file content
+            logging.info("Parsing EML file content...")
             msg = BytesParser(policy=policy.default).parsebytes(file_content)
 
-            
-            # Try to extract information from the email
-            logging.info("Extracting email information...")
-            logging.info(f"Subject: {msg['subject']}")
-            logging.info(f"From: {msg['from']}")    
-            logging.info(f"To: {msg['to']}")
-            logging.info(f"CC: {msg['cc']}")
-            logging.info(f"Date: {msg['date']}")
-
+            # Get the body of the email
+            logging.info("Extracting email body...")
             msg_body = msg.get_body(preferencelist=('html', 'plain'))
             
+            # Make soup object from the email body 
             soup = BeautifulSoup(msg_body.get_content(), 'html.parser')
 
-            # Add header to the HTML
+            # Create a header with email metadata
+            logging.info("Creating header with email metadata...")
             header = '<div>'
             header += f'<b>Date:</b> {html.escape(msg["date"])}<br>'
             header += f'<b>Subject:</b> {html.escape(msg["subject"])}<br>'
             header += f'<b>From:</b> {html.escape(msg["from"])}<br>'
             header += f'<b>To:</b> {html.escape(msg["to"])}<br>'
+            # If CC is present, add it to the header
             if msg["cc"]:
                 header += f'<b>CC:</b> {html.escape(msg["cc"])}<br>'
             
             headerAttachments = ''
 
+            # Iterate through the email parts to find attachments and inline images
+            logging.info("Processing email parts for attachments and inline images...")
             for part in msg.walk():
-                # For attachments add filename and content type to headerAttachments
+                # For attachments add filename to headerAttachments
                 if part.get_content_disposition() == 'attachment':
                    
-                    headerAttachments += f'<li>{html.escape(part.get_filename())} ({part.get_content_type()})</li>'
-                    logging.info(f"Found an attachment: {part.get_filename()}")
-
+                    headerAttachments += f'<li>{html.escape(part.get_filename())}</li>'
+                # For inline images, replace the src with base64 data
                 if part.get_content_disposition() == 'inline':
-                    logging.info(f"Found an inline part: {part.get_filename()}")
-
                     logging.info(f"Content-Id: {part.get('Content-Id')[1:-1] }")
                 
+                    # Find the image tag in the soup object
                     imgTag = soup.find(src='cid:'+part.get('Content-Id')[1:-1])
 
-                    logging.info(f"Image tag found: {imgTag}")
-
+                    # If the image tag is found, replace the src with base64 data   
                     if imgTag:
                         imgTag['src'] = 'data:' + part.get_content_type() + ';base64,' + base64.b64encode(part.get_payload(decode=True)).decode('utf-8')
                         logging.info(f"Image data embedded.")
-
-                
 
             if headerAttachments:
                 header += '<b>Attachments:</b><ul>'
@@ -81,18 +78,22 @@ async def convertMsgToPdf(req: func.HttpRequest) -> func.HttpResponse:
             # Insert the header at the beginning of the body
             soup.body.insert_before(headerFragment)
 
+            # Insert styling to the HTML
+            soup.head.insert_before(BeautifulSoup('<style>@media print { img {max-width: 100% !important; max-height: 100% !important; } }</style>', 'html.parser'))
+
             # Convert the modified HTML to PDF
             logging.info("Converting HTML to PDF...")
-      
             async with async_playwright() as p:
+                # Launch a headless browser and create a new page
                 browser = await p.chromium.launch(headless=True)
                 page = await browser.new_page()
+                # Set the content of the page to the extracted and modified HTML
                 await page.set_content(str(soup.prettify(formatter="html")))
-                pdf = await page.pdf(format='A4', print_background=True)
+                # Generate the PDF from the page content in A4 format
+                pdf = await page.pdf(format='A4')
+                # Close the browser
                 await browser.close()
                 logging.info("PDF conversion completed.")
-
-            #logging.info(f"Modified HTML: {soup.prettify()}")
 
             return func.HttpResponse(
                 pdf,
@@ -100,7 +101,6 @@ async def convertMsgToPdf(req: func.HttpRequest) -> func.HttpResponse:
                 status_code=200
             )
         
-            # return func.HttpResponse("Successfully decoded file content.", status_code=200)
         else:
             return func.HttpResponse("No file found in request body.", status_code=400)
         
