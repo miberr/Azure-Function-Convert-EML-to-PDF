@@ -3,8 +3,8 @@
 @description('The target envirionment to deploy to.')
 param environment string
 
-@description('The name of the application. Defaults to emltopdf.')
-param appName string = 'emltopdf'
+@description('The name of the application. This will be used to create unique resource names.')
+param appName string
 
 // Variables
 var location = resourceGroup().location
@@ -30,11 +30,9 @@ resource storageBlobDataContributorRoleDefinition 'Microsoft.Authorization/roleD
   name: 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
 }
 
-
-
 // Resources
 resource storageAccount 'Microsoft.Storage/storageAccounts@2025-01-01' = {
-  name: 'st${appName}${environment}001'
+  name: 'st${toLower(appName)}${environment}001'
   location: location
   kind: 'StorageV2'
   sku: {
@@ -104,7 +102,7 @@ resource containerAppEnv 'Microsoft.App/managedEnvironments@2024-03-01' = {
 }
 
 resource containerApp 'Microsoft.App/containerApps@2024-08-02-preview' = {
-  name: 'ca-${appName}-${environment}'
+  name: 'ca-${toLower(appName)}-${environment}'
   location: location
   kind: 'functionapp'
   identity: {
@@ -231,6 +229,10 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
       '$schema': 'https://schema.management.azure.com/schemas/2016-06-01/workflowdefinition.json#'
       contentVersion: '1.0.0.0'
       parameters: {
+        endpointUrl: {
+          defaultValue: 'http://localhost:7071/api/convertEmlToPdf'
+          type: 'String'
+        }
         '$connections': {
           defaultValue: {}
           type: 'Object'
@@ -309,7 +311,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
           }
           type: 'Http'
           inputs: {
-            uri: 'https://ca-emltopdf-dev.calmtree-340728b8.westeurope.azurecontainerapps.io/api/convertEmlToPdf'
+            uri: '@parameters(\'endpointUrl\')'
             method: 'POST'
             headers: {
               'x-functions-key': '@{body(\'Get_secret\')?[\'value\']}'
@@ -355,7 +357,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
             path: '/datasets/default/files'
             queries: {
               folderPath: '/'
-              name: 'test.pdf'
+              name: 'email@{ticks(utcNow())}.pdf'
             }
           }
           runtimeConfiguration: {
@@ -368,18 +370,21 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
       outputs: {}
     }
     parameters: {
+      endpointUrl: {
+        value: 'https://${containerApp.properties.configuration.ingress.fqdn}/api/convertEmlToPdf'
+      }
       '$connections': {
         type: 'Object'
         value: {
           office365: {
             id: outlookConnection.properties.api.id
             connectionId: outlookConnection.id
-            conectionName: outlookConnection.name
+            connectionName: outlookConnection.name
           }
           keyvault: {
             id: keyVaultConnection.properties.api.id
             connectionId: keyVaultConnection.id
-            conectionName: keyVaultConnection.name
+            connectionName: keyVaultConnection.name
             connectionProperties: {
               authentication: {
                 type: 'ManagedServiceIdentity'
@@ -440,3 +445,5 @@ resource logicAppDiagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-0
     ]
   }
 }
+
+output endpoint string = 'https://${containerApp.properties.configuration.ingress.fqdn}/api/convertEmlToPdf'
