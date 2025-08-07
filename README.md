@@ -66,8 +66,8 @@ This repository contains source files for a containerized Azure Function for con
 
 1. Repeat for the another connection.
 
-    > [!WARNING]
-    > You should use what ever account you want to connect to an email to and what users OneDrive. It's best practice to use service accounts for these kind of scenarios.
+> [!WARNING]
+> You should use what ever account you want to connect to an email to and what users OneDrive. It's best practice to use service accounts for these kind of scenarios.
 
 1. Now send an email to the inbox you connected to and wait for the file to appear in OneDrive 😎
 
