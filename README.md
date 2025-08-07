@@ -17,7 +17,7 @@ This repository contains source files for a containerized Azure Function for con
 >
 > -   Azure subscription
 > -   Resource group in Azure
->     [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/what-is-azure-cli?view=azure-cli-latest) installed on your machine
+> -   [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/what-is-azure-cli?view=azure-cli-latest) installed on your machine
 > -   Basic understanding of containerized applications
 
 1. Download the [💪 Bicep file](https://raw.githubusercontent.com/miberr/Azure-Function-Convert-EML-to-PDF/main/infrastructure.bicep) to your machine
@@ -35,14 +35,14 @@ This repository contains source files for a containerized Azure Function for con
 
 1. Navigate to your resource group in Azure Portal. It should now look like this:
 
-    ![Screenshot of deployed resources in Azure](./deployed-resources-in-azure-portal.png)
+    <img width="1642" height="927" alt="Screenshot of deployed resources in Azure" src="https://github.com/user-attachments/assets/a78cbc8c-6768-461d-8801-4aedb95c8036" />
 
 1. To initialize the secrets in Key Vault we have to send a POST request to the new endpoint.
 
     - Find the url by navigating to the **Container App**
     - Copy the value
 
-        ![Finding the url for the container app](./finding-the-application-url.png)
+       <img width="1828" height="618" alt="Finding the url for the container app" src="https://github.com/user-attachments/assets/50273e01-92d7-4def-bff4-723d4798074c" />
 
     - Add the uri at the end `/api/convertEmlToPdf`
     - Send a request with your chosen tool. Make sure you include the **x-functions-key** header. The value can be what ever, for example `test`. You should get **401 Unauthorized** response back.
@@ -58,18 +58,19 @@ This repository contains source files for a containerized Azure Function for con
 
 1. The last configuration to do is to open the API connections for Outlook and OneDrive to authorize them. Click on the **first one**.
 
-    ![Connections needing authorization](./connections-needed-to-be-authorized.png)
+    <img width="936" height="121" alt="Connections needing authorization" src="https://github.com/user-attachments/assets/96529153-caa4-4ddb-a9ad-74a1b7764eda" />
 
 1. Click on the **error**, then **Authorize**, login with your account and finally select **Save**
 
-    ![Authorize connection](./authorize-connection.png)
+    <img width="1148" height="443" alt="Authorize connection" src="https://github.com/user-attachments/assets/53a08af5-139b-4a38-96a8-e4a90ffce5bc" />
+
 
 1. Repeat for the another connection.
+   
+1. Now send an email to the inbox you connected to and wait for the file to appear in OneDrive 😎
 
 > [!WARNING]
 > You should use what ever account you want to connect to an email to and what users OneDrive. It's best practice to use service accounts for these kind of scenarios.
-
-1. Now send an email to the inbox you connected to and wait for the file to appear in OneDrive 😎
 
 ## Usage
 
