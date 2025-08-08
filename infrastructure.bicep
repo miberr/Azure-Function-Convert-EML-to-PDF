@@ -122,7 +122,7 @@ resource containerApp 'Microsoft.App/containerApps@2024-08-02-preview' = {
       containers: [
         {
           name: 'azure-function-convert-email-to-pdf'
-          image: 'docker.io/miberr/azure-function-convert-email-to-pdf:latest'
+          image: 'ghcr.io/miberr/azure-function-convert-email-to-pdf:latest'
           command: []
           args: []
           resources: {
