@@ -42,7 +42,7 @@ This repository contains source files for a containerized Azure Function for con
     -   Find the url by navigating to the **Container App**
     -   Copy the value
 
-             <img width="1828" height="618" alt="Finding the url for the container app" src="https://github.com/user-attachments/assets/50273e01-92d7-4def-bff4-723d4798074c" />
+          <img width="1828" height="618" alt="Finding the url for the container app" src="https://github.com/user-attachments/assets/50273e01-92d7-4def-bff4-723d4798074c" />
 
     -   Add the uri at the end `/api/convertEmlToPdf`
     -   Send a request with your chosen tool. Make sure you include the **x-functions-key** header. The value can be what ever, for example `test`. You should get **401 Unauthorized** response back.
