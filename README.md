@@ -1,13 +1,13 @@
 # Azure Function (Containerized) Convert EML to PDF
 
-This repository contains source files for a containerized Azure Function for converting EML files into PDF 📧. There is also a 💪 Bicep file for easy deployment. Built container available in Docker Hub LINK LINK.
+This repository contains source files for a containerized Azure Function for converting EML files into PDF 📧. There is also a 💪 Bicep file for easy deployment. Built container available with `docker pull ghcr.io/miberr/azure-function-convert-email-to-pdf:latest`.
 
 ## Features
 
 -   🤓 Function source code for creating your own containers
 -   💪 Bicep file for deploying the resources right away
 -   🤖 Ready made Azure Logic App to convert incoming emails
--   📦 Built container in Docker Hub LINK LINK
+-   📦 Built container available with `docker pull ghcr.io/miberr/azure-function-convert-email-to-pdf:latest`
 
 ## Installation
 
@@ -35,17 +35,17 @@ This repository contains source files for a containerized Azure Function for con
 
 1. Navigate to your resource group in Azure Portal. It should now look like this:
 
-    <img width="1642" height="927" alt="Screenshot of deployed resources in Azure" src="https://github.com/user-attachments/assets/a78cbc8c-6768-461d-8801-4aedb95c8036" />
+ <img width="1642" height="927" alt="Screenshot of deployed resources in Azure" src="https://github.com/user-attachments/assets/a78cbc8c-6768-461d-8801-4aedb95c8036" />
 
-1. To initialize the secrets in Key Vault we have to send a POST request to the new endpoint.
+1.  To initialize the secrets in Key Vault we have to send a POST request to the new endpoint.
 
-    - Find the url by navigating to the **Container App**
-    - Copy the value
+    -   Find the url by navigating to the **Container App**
+    -   Copy the value
 
-       <img width="1828" height="618" alt="Finding the url for the container app" src="https://github.com/user-attachments/assets/50273e01-92d7-4def-bff4-723d4798074c" />
+             <img width="1828" height="618" alt="Finding the url for the container app" src="https://github.com/user-attachments/assets/50273e01-92d7-4def-bff4-723d4798074c" />
 
-    - Add the uri at the end `/api/convertEmlToPdf`
-    - Send a request with your chosen tool. Make sure you include the **x-functions-key** header. The value can be what ever, for example `test`. You should get **401 Unauthorized** response back.
+    -   Add the uri at the end `/api/convertEmlToPdf`
+    -   Send a request with your chosen tool. Make sure you include the **x-functions-key** header. The value can be what ever, for example `test`. You should get **401 Unauthorized** response back.
 
         ```http
         POST https://xxxx.westeurope.azurecontainerapps.io/api/convertEmlToPdf
@@ -56,17 +56,15 @@ This repository contains source files for a containerized Azure Function for con
         }
         ```
 
-1. The last configuration to do is to open the API connections for Outlook and OneDrive to authorize them. Click on the **first one**.
+1.  The last configuration to do is to open the API connections for Outlook and OneDrive to authorize them. Click on the **first one**.
 
-    <img width="936" height="121" alt="Connections needing authorization" src="https://github.com/user-attachments/assets/96529153-caa4-4ddb-a9ad-74a1b7764eda" />
+ <img width="936" height="121" alt="Connections needing authorization" src="https://github.com/user-attachments/assets/96529153-caa4-4ddb-a9ad-74a1b7764eda" />
 
 1. Click on the **error**, then **Authorize**, login with your account and finally select **Save**
 
-    <img width="1148" height="443" alt="Authorize connection" src="https://github.com/user-attachments/assets/53a08af5-139b-4a38-96a8-e4a90ffce5bc" />
-
+ <img width="1148" height="443" alt="Authorize connection" src="https://github.com/user-attachments/assets/53a08af5-139b-4a38-96a8-e4a90ffce5bc" />
 
 1. Repeat for the another connection.
-   
 1. Now send an email to the inbox you connected to and wait for the file to appear in OneDrive 😎
 
 > [!WARNING]
@@ -82,4 +80,4 @@ Contributions are welcome! If you find any issues or have suggestions for improv
 
 ## Acknowledgements
 
-This project was created as part of a blog post on converting emails into PDFs. You can read the full post here.
+This project was created as part of a blog post on converting emails into PDFs. You can read the full post [here](https://mikkoberg.com/blog/email-to-pdf-with-automation).
