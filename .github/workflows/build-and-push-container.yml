@@ -1,4 +1,4 @@
-name: Push Container to Docker Hub
+name: Build and push container
 
 on:
     push:
@@ -10,7 +10,7 @@ on:
             - '.github/*'
 
 jobs:
-    push-to-dockerhub:
+    push-to-chcr:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
@@ -19,12 +19,13 @@ jobs:
             - name: Log in to Docker Hub
               uses: docker/login-action@v1
               with:
-                  username: ${{ secrets.DOCKERHUB_USERNAME }}
-                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Build and push Docker image
+            - name: Build and push image
               uses: docker/build-push-action@v2
               with:
                   context: .
                   push: true
-                  tags: ${{ secrets.DOCKERHUB_USERNAME }}/azure-function-convert-email-to-pdf:latest
+                  tags: ghcr.io/${{ github.repository }}/azure-function-convert-email-to-pdf:latest
