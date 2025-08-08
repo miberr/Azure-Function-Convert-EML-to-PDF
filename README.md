@@ -20,11 +20,11 @@ This repository contains source files for a containerized Azure Function for con
 > -   [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/what-is-azure-cli?view=azure-cli-latest) installed on your machine
 > -   Basic understanding of containerized applications
 
-1. Download the [💪 Bicep file](https://raw.githubusercontent.com/miberr/Azure-Function-Convert-EML-to-PDF/main/infrastructure.bicep) to your machine
-1. Open terminal
-1. Login to Azure CLI with command `az login`. A popup opens, login with your credentials.
-1. If you have multiple subscriptions, select the one you want to deploy to by typing its number and pressing **enter**
-1. Run command `az deployment group create --template-file .\infrastructure.bicep --resource-group rg-emailtopdftest-dev --parameters environment=dev appName=emailtopdf` with the following parameters:
+1.  Download the [💪 Bicep file](https://raw.githubusercontent.com/miberr/Azure-Function-Convert-EML-to-PDF/main/infrastructure.bicep) to your machine
+1.  Open terminal
+1.  Login to Azure CLI with command `az login`. A popup opens, login with your credentials.
+1.  If you have multiple subscriptions, select the one you want to deploy to by typing its number and pressing **enter**
+1.  Run command `az deployment group create --template-file .\infrastructure.bicep --resource-group rg-emailtopdftest-dev --parameters environment=dev appName=emailtopdf` with the following parameters:
 
     - _.\infrastructure.bicep_ is the path to the downloaded template file
     - _rg-emailtopdftest-dev_ the resource group name
@@ -33,9 +33,9 @@ This repository contains source files for a containerized Azure Function for con
 
     In case there is a conflict with a name for example, the CLI will tell you about it. If you see no red, that means the deployment was successful 🥳.
 
-1. Navigate to your resource group in Azure Portal. It should now look like this:
+1.  Navigate to your resource group in Azure Portal. It should now look like this:
 
- <img width="1642" height="927" alt="Screenshot of deployed resources in Azure" src="https://github.com/user-attachments/assets/a78cbc8c-6768-461d-8801-4aedb95c8036" />
+<img width="1642" height="927" alt="Screenshot of deployed resources in Azure" src="https://github.com/user-attachments/assets/a78cbc8c-6768-461d-8801-4aedb95c8036" />
 
 1.  To initialize the secrets in Key Vault we have to send a POST request to the new endpoint.
 
@@ -58,14 +58,14 @@ This repository contains source files for a containerized Azure Function for con
 
 1.  The last configuration to do is to open the API connections for Outlook and OneDrive to authorize them. Click on the **first one**.
 
- <img width="936" height="121" alt="Connections needing authorization" src="https://github.com/user-attachments/assets/96529153-caa4-4ddb-a9ad-74a1b7764eda" />
+    <img width="936" height="121" alt="Connections needing authorization" src="https://github.com/user-attachments/assets/96529153-caa4-4ddb-a9ad-74a1b7764eda" />
 
-1. Click on the **error**, then **Authorize**, login with your account and finally select **Save**
+1.  Click on the **error**, then **Authorize**, login with your account and finally select **Save**
 
- <img width="1148" height="443" alt="Authorize connection" src="https://github.com/user-attachments/assets/53a08af5-139b-4a38-96a8-e4a90ffce5bc" />
+<img width="1148" height="443" alt="Authorize connection" src="https://github.com/user-attachments/assets/53a08af5-139b-4a38-96a8-e4a90ffce5bc" />
 
-1. Repeat for the another connection.
-1. Now send an email to the inbox you connected to and wait for the file to appear in OneDrive 😎
+1.  Repeat for the another connection.
+1.  Now send an email to the inbox you connected to and wait for the file to appear in OneDrive 😎
 
 > [!WARNING]
 > You should use what ever account you want to connect to an email to and what users OneDrive. It's best practice to use service accounts for these kind of scenarios.
