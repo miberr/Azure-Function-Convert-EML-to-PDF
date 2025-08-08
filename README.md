@@ -35,7 +35,7 @@ This repository contains source files for a containerized Azure Function for con
 
 1.  Navigate to your resource group in Azure Portal. It should now look like this:
 
-<img width="1642" height="927" alt="Screenshot of deployed resources in Azure" src="https://github.com/user-attachments/assets/a78cbc8c-6768-461d-8801-4aedb95c8036" />
+    <img width="1642" height="927" alt="Screenshot of deployed resources in Azure" src="https://github.com/user-attachments/assets/a78cbc8c-6768-461d-8801-4aedb95c8036" />
 
 1.  To initialize the secrets in Key Vault we have to send a POST request to the new endpoint.
 
@@ -62,7 +62,7 @@ This repository contains source files for a containerized Azure Function for con
 
 1.  Click on the **error**, then **Authorize**, login with your account and finally select **Save**
 
-<img width="1148" height="443" alt="Authorize connection" src="https://github.com/user-attachments/assets/53a08af5-139b-4a38-96a8-e4a90ffce5bc" />
+    <img width="1148" height="443" alt="Authorize connection" src="https://github.com/user-attachments/assets/53a08af5-139b-4a38-96a8-e4a90ffce5bc" />
 
 1.  Repeat for the another connection.
 1.  Now send an email to the inbox you connected to and wait for the file to appear in OneDrive 😎
